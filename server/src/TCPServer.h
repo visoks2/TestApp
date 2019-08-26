@@ -14,14 +14,15 @@
 #include <thread>
 #include <algorithm>
 #include <cctype>
-#include <mutex>
-#include "socket_description.h"
 #include <map>
 
-#define MAXPACKETSIZE 1024
-#define MAX_CLIENT 1000
-//#define CODA_MSG 4
+
+#include "socket_description.h"
+
+
 namespace Server{
+	constexpr int MAXPACKETSIZE (1024);
+	
 	class TCPServer
 	{
 	public:
@@ -29,26 +30,18 @@ namespace Server{
 		~TCPServer(){
 			close(sockfd);
 		}
-		void Close(){
-			close(sockfd);
-		}
-		// TODO: move to construct
-		
-
-
-		static void Send(std::string msg, int id);
 		static void sendTime(socket_description* desc);
 
 		void AcceptNewClients();
 		void Receive();
 		static bool is_online();
 
-	// private:
-		static void acceptLoop(int sockfd, struct sockaddr_in clientAddress);
+	private:
+		static void acceptLoop(int aSockfd, struct sockaddr_in aClientAddress);
 		static void receiveLoop();
 
 
-		int sockfd, n, pid;
+		int sockfd;
 		struct sockaddr_in serverAddress;
 		struct sockaddr_in clientAddress;
 

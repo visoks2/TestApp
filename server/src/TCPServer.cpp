@@ -71,7 +71,7 @@ void TCPServer::AcceptNewClients()
 	t.detach();
 }
 
-void TCPServer::acceptLoop(int sockfd, struct sockaddr_in clientAddress)
+void TCPServer::acceptLoop(int aSockfd, struct sockaddr_in aClientAddress)
 {
 	while(1) {
 		static int clientID(0);
@@ -79,8 +79,8 @@ void TCPServer::acceptLoop(int sockfd, struct sockaddr_in clientAddress)
 		
 		socklen_t sosize    = sizeof(clientAddress);
 		socket_description so (
-			accept(sockfd,(struct sockaddr*)&clientAddress,&sosize),
-			inet_ntoa(clientAddress.sin_addr),
+			accept(aSockfd,(struct sockaddr*)&aClientAddress,&sosize),
+			inet_ntoa(aClientAddress.sin_addr),
 			clientID
 		);
 		newsockfd[clientID] = std::move(so);
