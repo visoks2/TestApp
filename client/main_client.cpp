@@ -7,6 +7,7 @@ TCPClient tcp;
 bool isClosing = false;
 void close_app(int s)
 {
+	std::cout << "close_app" << std::endl;
 	isClosing = true;
 	tcp.Close();
 }
@@ -25,15 +26,15 @@ int main(int argc, char *argv[])
 		tcp.Setup(argv[1], std::atoi(argv[2]));
 		while(!isClosing)
 		{
+			std::cout << "sending" << std::endl;
 			tcp.Send(argv[3]);
-			std::string rec = tcp.Read();
+			std::cout << "receiving" << std::endl;
+			std::string rec = tcp.Receive();
 			if( rec != "" )
 			{
-				static int count (0);
-				count++;
-				std::cout << count << "\t" << rec << std::endl;
+				std::cout << rec << std::endl;
 			}
-			sleep(1);
+			usleep(100);
 		}
 	}
 	catch(const SocketException& e)

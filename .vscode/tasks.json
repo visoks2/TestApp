@@ -18,6 +18,26 @@
                 "isDefault": true,
             },
             "problemMatcher": []
-        }
+        },
+        // {
+        //     "label": "start server",
+        //     "type": "shell",
+        //     "command": "${workspaceFolder}/build/server/Server 5050 1",
+        //     "group": {
+        //         "kind": "build",
+        //         "isDefault": true,
+        //     },
+        //     "problemMatcher": []
+        // },
+        // {
+        //     "label": "start client",
+        //     "type": "shell",
+        //     "command": "${workspaceFolder}/build/client/Client 0.0.0.0 5050 help",
+        //     "group": {
+        //         "kind": "build",
+        //         "isDefault": true,
+        //     },
+        //     "problemMatcher": []
+        // }
     ]
 }

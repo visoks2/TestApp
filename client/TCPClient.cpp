@@ -34,7 +34,10 @@ void TCPClient::Send(std::string data)
 		throw SocketException("Connect failed.");
 	}
 	
-	if(send(sock, data.c_str(), data.length(), 0) < 0) {
+	static int count (0);
+	count++;
+	std::string msgToSend(std::to_string(count) + "\t" + data);
+	if(send(sock, msgToSend.c_str(), msgToSend.length(), 0) < 0) {
 		throw SocketException("Send failed : " + data);
 	}
 }
@@ -43,7 +46,7 @@ std::string TCPClient::Receive(int size)
 {
 	std::string buf;
 	buf.resize(size);
-	if(recv(sock, &buf.front() , size, 0) < 0) {
+	if(recv(sock, &buf.front(), size, 0) < 0) {
 	    throw SocketException("Receive failed!");
   	}
   	return buf;
@@ -51,16 +54,16 @@ std::string TCPClient::Receive(int size)
 std::string TCPClient::Read()
 {
   	char buffer[1] = {};
-  	std::string reply;
+  	std::stringstream reply;
   	while (buffer[0] != '\n') {
-    		if( recv(sock , buffer , sizeof(buffer) , 0) < 0)
-    		{
-      			std::cout << "receive failed!" << std::endl;
+		if( recv(sock , buffer , sizeof(buffer) , 0) < 0)
+		{
+			std::cout << "receive failed!" << std::endl;
 			return nullptr;
-    		}
-		reply += buffer[0];
+		}
+		reply << buffer[0];
 	}
-	return reply;
+	return reply.str();
 }
 void TCPClient::Close()
 {

@@ -2,65 +2,51 @@
 #include "exceptions.h" 
 #include <memory> 
 #include <thread>
+#include <map>
+
+using namespace Server;
+
+constexpr int 			   	REFRESH_INTERVAL	{1000};
+constexpr int 			   	SEND_INTERVAL		{1000};
 
 
-char TCPServer::msg[MAXPACKETSIZE];
-int TCPServer::num_client;
-int TCPServer::last_closed;
-bool TCPServer::isonline;
-std::vector<struct descript_socket*> TCPServer::Message;
-std::vector<struct descript_socket*> TCPServer::newsockfd;
-std::mutex TCPServer::mt;
+bool TCPServer::isOnline;
+std::map<int, socket_description> TCPServer::newsockfd;
 
-void TCPServer::Task(descript_socket* desc)
+
+void TCPServer::listenLoop(const int id)
 {
-	std::cout << "open client[ id:"	<< desc->id
-			  << " ip:"				<< desc->ip 
-			  << " socket:"			<< desc->socket
-			  << " send:"			<< desc->enable_message_runtime 
-			  << " ]" << std::endl;
+	auto& desc = newsockfd.at(id);
+	std::cout << "New client " << desc << std::endl;
 	while(1)
 	{
-		ssize_t recivedSize = recv(desc->socket, msg, MAXPACKETSIZE, 0);
-		if(recivedSize != -1) 
+		char msg[ MAXPACKETSIZE ];
+		ssize_t receivedSize = recv(desc.socket, msg, MAXPACKETSIZE, 0);
+		if(receivedSize != -1) 
 		{
-			if(recivedSize == 0)
-			{
-			   isonline = false;
-			   std::cout << "close client[ id:"	<< desc->id 
-						 << " ip:"				<< desc->ip 
-						 << " socket:"			<< desc->socket
-						 << " ]" << std::endl;
-			   last_closed = desc->id;
-			   close(desc->socket);
-
-			   int id = desc->id;
-			   auto new_end = std::remove_if(newsockfd.begin(), newsockfd.end(), [id](descript_socket *device) { return device->id == id; });
-			   newsockfd.erase(new_end, newsockfd.end());
-
-			   if(num_client>0) num_client--;
-			   break;
+			if(receivedSize == 0) {
+				std::cout << "Client left " << desc << std::endl;
+				isOnline = false;
+				close(desc.socket);
+				newsockfd.erase(id);
+				return;
 			}
-			msg[recivedSize]=0;
-			desc->message = std::string(msg);
-			std::lock_guard<std::mutex> guard(mt);
-			Message.push_back(desc);
+			msg[receivedSize] = 0;
+			desc.message = std::string(msg);
 		}
-		usleep(600);
+		usleep(REFRESH_INTERVAL);
 	}
 }
 
-void TCPServer::Setup(int port, std::vector<int>& opts)
+TCPServer::TCPServer(int port, std::vector<int> opts)
 {
-	isonline = false;
+	isOnline = false;
 	int opt = 1;
-	last_closed = -1;
 	sockfd = socket(AF_INET,SOCK_STREAM,0);
- 	memset(&serverAddress, 0, sizeof(serverAddress));
+	memset(&serverAddress, 0, sizeof(serverAddress));
 
 	for(unsigned int i = 0; i < opts.size(); i++) {
-		if( (setsockopt(sockfd, SOL_SOCKET, opts.size(), &opt, sizeof(opt))) < 0 ) {
-	std::cout << " Setup 1" << std::endl;
+		if ((setsockopt(sockfd, SOL_SOCKET, opts.size(), &opt, sizeof(opt))) < 0) {
 			throw SocketException("setsockopt failed"); 
 		}
 	}
@@ -69,73 +55,101 @@ void TCPServer::Setup(int port, std::vector<int>& opts)
 	serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	serverAddress.sin_port        = htons(port);
 
-	if((bind(sockfd,(struct sockaddr *)&serverAddress, sizeof(serverAddress))) < 0){
+	if ((bind(sockfd, reinterpret_cast<struct sockaddr *>(&serverAddress), sizeof(serverAddress))) < 0) {
 		throw SocketException("bind failed"); 
 	}
 	
- 	if(listen(sockfd,5) < 0){
+	if(listen(sockfd,5) < 0) {
 		throw SocketException("listen failed"); 
 	}
-	num_client = 0;
-	isonline = true;
+	isOnline = true;
 }
 
 void TCPServer::AcceptNewClients()
 {
-	socklen_t sosize    = sizeof(clientAddress);
-	struct descript_socket* so = new descript_socket;
-	so->socket          = accept(sockfd,(struct sockaddr*)&clientAddress,&sosize);
-	so->id              = num_client;
-	so->ip              = inet_ntoa(clientAddress.sin_addr);
-	newsockfd.push_back( so );
-	std::cout << "New Client! [id:" << newsockfd[num_client]->id 
-			  << ", ip:" 			<< newsockfd[num_client]->ip
-			  << ", handle:" 		<< newsockfd[num_client]->socket 
-			  << " ]" << std::endl;
-	std::thread t1(Task, newsockfd[num_client]);
-	t1.detach();
-	isonline=true;
-	num_client++;
+	std::thread t(acceptLoop, sockfd, clientAddress);
+	t.detach();
 }
 
-std::vector<struct descript_socket*> TCPServer::getMessage()
+void TCPServer::acceptLoop(int sockfd, struct sockaddr_in clientAddress)
 {
-	std::lock_guard<std::mutex> guard(mt);
-	return Message;
+	while(1) {
+		static int clientID(0);
+		clientID++;
+		
+		socklen_t sosize    = sizeof(clientAddress);
+		socket_description so (
+			accept(sockfd,(struct sockaddr*)&clientAddress,&sosize),
+			inet_ntoa(clientAddress.sin_addr),
+			clientID
+		);
+		newsockfd[clientID] = std::move(so);
+		std::thread t(listenLoop, clientID);
+		t.detach();
+		isOnline=true;
+		usleep(REFRESH_INTERVAL);
+	}
 }
-
-void TCPServer::Send(std::string msg, int id)
+void TCPServer::Receive()
 {
-	send(newsockfd[id]->socket,msg.c_str(),msg.length(),0);
-}
-
-int TCPServer::get_last_closed_sockets()
-{
-	return last_closed;
-}
-
-void TCPServer::clean(int id)
-{
-	Message[id]->message.clear();
-	memset(msg, 0, MAXPACKETSIZE);
-}
-
-std::string TCPServer::get_ip_addr(int id)
-{
-	return newsockfd[id]->ip;
+	std::thread thread_accept(receiveLoop);
+	thread_accept.detach();
 }
 
 bool TCPServer::is_online() 
 {
-	return isonline;
+	return isOnline;
+}
+void TCPServer::receiveLoop()
+{
+	while(1)
+	{
+		for (auto &&sock : newsockfd)
+		{
+			
+			if(!sock.second.message.empty())
+			{
+				std::cout << "received " << sock.second << std::endl;
+				sock.second.message.clear();
+
+				sendTime(&sock.second);
+			}
+		}
+		usleep(REFRESH_INTERVAL);
+	}
 }
 
-void TCPServer::detach(int id)
-{
-	close(newsockfd[id]->socket);
-	newsockfd[id]->ip = "";
-	newsockfd[id]->id = -1;
-	newsockfd[id]->message = "";
-} 
+void TCPServer::sendTime(socket_description* desc) {
+		if(!is_online()) {
+			std::cout << "offline!" << std::endl;
+			return;
+		}
+		std::time_t t = std::time(0);
+		std::tm* now = std::localtime(&t);
+		int hour = now->tm_hour;
+		int min  = now->tm_min;
+		int sec  = now->tm_sec;
+
+		std::string date = 
+			    std::to_string(now->tm_year + 1900) + "-" +
+			    std::to_string(now->tm_mon + 1)     + "-" +
+			    std::to_string(now->tm_mday)        + " " +
+			    std::to_string(hour)                + ":" +
+			    std::to_string(min)                 + ":" +
+			    std::to_string(sec)                 + "\r\n";
+		// usleep(REFRESH_INTERVAL);
+			std::cout << "sending " << date << std::endl;
+		send(desc->socket,date.c_str(),date.length(),0);
+			std::cout << "sent" << std::endl;
+}
+
+
+
+
+
+
+
+
+
 
 
