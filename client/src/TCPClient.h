@@ -14,21 +14,22 @@
 #include <vector>
 #include <sstream>
 
+namespace Client {
 
-class TCPClient
-{
-  public:
-    TCPClient();
-    ~TCPClient();
-    void Setup(std::string address, int port);
-    void Send(std::string data);
-    std::string Receive(int size = 1024);
-    std::string Read();
-    void Close();
-  private:
-    int sock;
-    std::string address;
-    int port;
-    struct sockaddr_in server;
-};
+  class TCPClient
+  {
+    public:
+      TCPClient(std::string address , int port);
+      ~TCPClient();
+      void Send(std::string data);
+      std::string Receive(int size = 1024);
+      std::string Read();
+      void Close();
+    private:
+      int sock;
+      std::string address;
+      int port;
+      struct sockaddr_in server;
+  };
 
+}

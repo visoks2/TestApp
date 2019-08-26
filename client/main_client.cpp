@@ -4,13 +4,12 @@
 #include "TCPClient.h"
 #include "exceptions.h"
 
-TCPClient tcp;
-bool isClosing = false;
+using namespace Client;
+
+bool running = true;
 void close_app(int s)
 {
-	std::cout << "close_app" << std::endl;
-	isClosing = true;
-	tcp.Close();
+	running = false;
 }
 
 int main(int argc, char *argv[])
@@ -24,8 +23,8 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		tcp.Setup(argv[1], std::atoi(argv[2]));
-		while(!isClosing)
+		TCPClient tcp(argv[1], std::atoi(argv[2]));
+		while(running)
 		{
 			std::cout << "sending" << std::endl;
 			tcp.Send(argv[3]);

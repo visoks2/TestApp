@@ -1,20 +1,13 @@
 #include "TCPClient.h"
 #include "exceptions.h"
+using namespace Client;
 
-TCPClient::TCPClient()
+TCPClient::TCPClient(std::string address , int port)
 	: sock(-1)
 	, port(0)
 	, address("")
 {
-
-}
-TCPClient::~TCPClient()
-{
-	Close();
-}
-void TCPClient::Setup(std::string address , int port)
-{
-  	if(sock == -1) {
+	if(sock == -1) {
 		sock = socket(AF_INET, SOCK_STREAM , 0);
 		if (sock == -1) {
 			throw SocketException("Could not create socket");
@@ -26,6 +19,10 @@ void TCPClient::Setup(std::string address , int port)
   	if (connect(sock , reinterpret_cast<struct sockaddr *>(&server) , sizeof(server)) < 0) {
 		throw SocketException("Connect failed.");
   	}
+}
+TCPClient::~TCPClient()
+{
+	Close();
 }
 
 void TCPClient::Send(std::string data)

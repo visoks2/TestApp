@@ -6,8 +6,8 @@
 
 using namespace Server;
 
-constexpr int 			   	REFRESH_INTERVAL	{1000};
-constexpr int 			   	SEND_INTERVAL		{1000};
+constexpr int 			   	REFRESH_INTERVAL	{5000};
+constexpr int 			   	SEND_INTERVAL		{5000};
 
 
 bool TCPServer::isOnline;
