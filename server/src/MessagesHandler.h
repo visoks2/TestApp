@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include "Common.h"
+#include "Exceptions.h"
 
 #include "dataStorageHandler.h"
 #include <data.pb.h>
@@ -24,12 +25,16 @@ namespace Server {
             
         };
 
-        std::string ProcessMessage(std::string& aMsg) 
+        std::string ProcessMessage(socket_description& user, std::string& aMsg) 
         {
             gpb::Message parsedMsg;
             if(!parsedMsg.ParseFromString(aMsg)) {
                 // TODO: throw
             }
+            if ((!user.isAuthenticated) && (parsedMsg.action() != gpb::Message_Action::Message_Action_AUTHENTICATE)) {
+                throw Common::AuthenticationFailedException();
+            }
+
             switch (parsedMsg.action())
             {
                 case gpb::Message_Action::Message_Action_CREATE: {
@@ -47,6 +52,10 @@ namespace Server {
                     storageHandler.Remove(parsedMsg.record());
                     return std::string("deleted"); // TODO: send normal response
                 }
+                case gpb::Message_Action::Message_Action_AUTHENTICATE: {
+                    user.isAuthenticated = storageHandler.Authenticate(parsedMsg.record());
+                    return user.isAuthenticated ? std::string("come on in") : std::string("You not shall pass"); // TODO: send normal response
+                }
                 default:
                     break;
             }
@@ -54,7 +63,6 @@ namespace Server {
             return std::string("unknown command");
         }
     private:
-        const char * FILE = "db.txt";
         dataStorageHandler storageHandler;
     };
     

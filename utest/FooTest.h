@@ -6,6 +6,7 @@
 #include "TCPClient.h"
 #include "TCPServer.h"
 #include "MessagesHandler.h"
+#include "Common.h"
 
 
 // TEST(FooTest, t1) {
@@ -51,16 +52,23 @@
     ASSERT_TRUE(server.is_online());
     ASSERT_NO_THROW(server.AcceptNewClients());
     Client::TCPClient client("127.0.0.1", 5050);
-    client.Create("id", "name", "pass");
-    client.Create("id2", "asas", "pass");
-    client.Create("id3", "asdasda", "pass");
+    Client::TCPClient client2("127.0.0.1", 5050);
+    client.Authenticate(MASTER_PASSWORD);
+    client.Create("id_client", "client", "passclient");
+    client2.Authenticate(MASTER_PASSWORD);
+    {
+        Client::TCPClient client3("127.0.0.1", 5050);
+        client3.Authenticate(MASTER_PASSWORD);
+        client.Create("id2", "asas", "pass");
+        client2.Create("id_client22", "asdasda", "passclient2");
+        client3.Create("id33client3", "name2", "pass2client3");
+        client3.Create("id33client3", "client3client3", "pass2");
+    }
     client.Create("id33", "name", "pass2");
-    client.Create("id33", "name2", "pass2");
-    client.Create("id33", "name2", "pass2");
-    client.Delete("id33", "name");
-    std::cout << client.Read() << std::endl;
-    std::cout << client.Read() << std::endl;
-    std::cout << client.Read() << std::endl;
+    client2.Delete("id33", "name");
+    DEBUG_LOG(client.Read());
+    DEBUG_LOG(client.Read());
+    DEBUG_LOG(client.Read());
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <mutex>
 
 #include <google/protobuf/util/delimited_message_util.h>
 
@@ -19,7 +20,8 @@ public:
     std::string Read(gpb::Message_Record aRecord);
     void Update(gpb::Message_Record aRecord);
     void Remove(gpb::Message_Record aRecord);
+    bool Authenticate(gpb::Message_Record aRecord);
 private:
-    const char * FILE = "db.txt";
     std::vector<gpb::Message_Record> records;
+    std::mutex mutex;
 };

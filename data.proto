@@ -9,6 +9,7 @@ message Message {
     READ = 1;
     UPDATE = 2;
     DELETE = 3;
+    AUTHENTICATE = 4;
   }
   message Record {
     string id = 1;

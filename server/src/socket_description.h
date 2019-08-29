@@ -1,24 +1,28 @@
 #pragma once
 #include <iostream>
+#include "Common.h"
 
 namespace Server{
     class socket_description {
     public:
         socket_description(){}
         socket_description(int aSocket, std::string aIp, int aId)
-        : socket	(aSocket)
-        , ip		(aIp)
-        , id		(aId)
+        : socket	        (aSocket)
+        , ip		        (aIp)
+        , id		        (aId)
+        , isAuthenticated   (false)
         {
         }
-        ~socket_description() = default;
+        ~socket_description() {
+        };
 
         friend inline std::ostream& operator<<(std::ostream& os, const socket_description& sd);
         friend inline bool operator==(const socket_description& aLhs, const socket_description& aRhs);
 
-        int socket;
+        int         socket;
         std::string ip;
-        int id; 
+        int         id; 
+        bool        isAuthenticated;
     };
     inline std::ostream& operator<<(std::ostream& os, const socket_description& sd)
     {

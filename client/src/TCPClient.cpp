@@ -6,6 +6,7 @@ using namespace Client;
 
 TCPClient::TCPClient(std::string aAddress, int aPort)
 	: sockedFd(-1)
+	, isAuthenticated(false)
 {
 	if(sockedFd == -1) {
 		sockedFd = socket(AF_INET, SOCK_STREAM , 0);
@@ -84,6 +85,18 @@ std::string TCPClient::Read()
 		reply << buffer[0];
 	}
 	return reply.str();
+}
+
+void TCPClient::Authenticate(std::string aPsw) {
+	gpb::Message message;
+	DEBUG_LOG(aPsw);
+	message.set_action(gpb::Message_Action::Message_Action_AUTHENTICATE);
+	auto* record = message.mutable_record();
+	record->set_password(aPsw);
+	Send(message);
+	std::string response = Read();
+	DEBUG_LOG(response);
+	isAuthenticated = response.compare("You shall pass") == 0;
 }
 
 void TCPClient::Close()

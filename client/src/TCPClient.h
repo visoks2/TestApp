@@ -64,7 +64,7 @@ namespace Client {
        */
       void Delete(std::string&& aId, std::string&& aName);
 
-      
+      void Authenticate(std::string aPsw);
       // std::string Receive(int size = 1024);
       std::string Read();
 
@@ -95,6 +95,8 @@ namespace Client {
        * @brief 	Structure describing an Internet socket address.
        */
       struct sockaddr_in server;
+
+      bool isAuthenticated;
   };
 
 }

@@ -32,4 +32,14 @@ namespace Common {
             return msg.c_str();
         }
     };
+    class AuthenticationFailedException: public std::exception
+    {
+    public:
+        explicit AuthenticationFailedException() { }
+        virtual const char* what() const throw()
+        {
+            return "Authentication failed";
+        }
+    };
+    
 }

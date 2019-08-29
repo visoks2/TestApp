@@ -23,16 +23,22 @@ int main(int argc, char *argv[])
 
 	try
 	{
+		std::string masterPsw;
 		TCPClient tcp(argv[1], std::atoi(argv[2]));
-		while(running)
-		{
-			// tcp.Send(argv[3]);
-			// std::string rec = tcp.Receive();
-			// if( rec != "" ) {
-			// 	std::cout << rec << std::endl;
-			// }
-			// usleep(100);
-		}
+		std::cout << "Connected!" << std::endl;
+		std::cout << "Enter master password:" << std::endl;
+		std::cin >> masterPsw;
+		std::cout << masterPsw << std::endl;
+		tcp.Authenticate(masterPsw);
+		// while(running)
+		// {
+		// 	tcp.Send(argv[3]);
+		// 	std::string rec = tcp.Receive();
+		// 	if( rec != "" ) {
+		// 		std::cout << rec << std::endl;
+		// 	}
+		// 	usleep(100);
+		// }
 	}
 	catch(const Common::SocketException& e)
 	{

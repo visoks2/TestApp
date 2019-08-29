@@ -39,7 +39,7 @@ TCPServer::TCPServer()
 void TCPServer::listenLoop(TCPServer * aServer, const int id)
 {
 	auto& desc = aServer->newsockfd.at(id);
-	std::cout << "New client \t" << desc << std::endl;
+	DEBUG_LOG_MSG(desc, std::string("New client!"));
 	while(aServer->keepRunning)
 	{
 		std::stringstream ss;
@@ -49,7 +49,7 @@ void TCPServer::listenLoop(TCPServer * aServer, const int id)
 			if (receivedSize != -1) 
 			{
 				if(receivedSize == 0) {
-					std::cout << "Client left \t" << desc << std::endl;
+					DEBUG_LOG_MSG(desc, std::string("Client left"));
 					aServer->isOnline = false;
 					close(desc.socket);
 					aServer->newsockfd.erase(id);
@@ -58,10 +58,31 @@ void TCPServer::listenLoop(TCPServer * aServer, const int id)
 				ss << buffer[0];
 			}
 		}
-		std::string str(ss.str());
-		str.erase(str.length() - 1);
-		std::string response = aServer->messagesHandler.ProcessMessage(str) + '\0';
-		send(desc.socket, response.c_str(), response.length(), 0);
+		try
+		{
+			std::string str(ss.str());
+			str.erase(str.length() - 1);
+			std::string response = aServer->messagesHandler.ProcessMessage(desc, str) + '\0';
+			send(desc.socket, response.c_str(), response.length(), 0);
+		}
+		catch(const Common::AuthenticationFailedException&)
+		{
+			// nope, this client must be forced to leave
+			close(desc.socket);
+			aServer->newsockfd.erase(id);
+		}
+		catch(const std::exception& e)
+		{
+			// everythings ok, nothing to see here
+			std::cerr << e.what() << '\n';
+		}
+		catch(...)
+		{
+			// hope it never gets to this point
+			close(desc.socket);
+			aServer->newsockfd.erase(id);
+		}
+		
 
 		// char msg[ MAXPACKETSIZE ];
 		// ssize_t receivedSize = recv(desc.socket, msg, MAXPACKETSIZE, 0);
@@ -88,6 +109,7 @@ TCPServer::~TCPServer()
 	isAcceptingNewClients = false;
 	acceptNewClients.join();
 	keepRunning = false;
+	
 	for (auto &&t : threads) {
 		t.join();
 	}
