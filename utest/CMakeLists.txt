@@ -4,6 +4,10 @@ include(GoogleTest)
 
 add_executable(test main.cpp)
 target_link_libraries(test ${GTEST_LIBRARIES} pthread)
-target_link_libraries(test TCPServerLib TCPClientLib)
+target_link_libraries(test 
+    TCPServerLib
+    TCPClientLib
+    CommonLib
+)
 # gtest_add_tests(TARGET      FooTest)
 

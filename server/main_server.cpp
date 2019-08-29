@@ -3,12 +3,13 @@
 #include <csignal>
 #include <ctime>
 #include <thread>
- #include <fstream>
+#include <fstream>
 
  
 #include "TCPServer.h"
-#include "exceptions.h"
+#include "Exceptions.h"
 #include "socket_description.h"
+#include "MessagesHandler.h"
 
 using namespace Server;
 
@@ -34,18 +35,17 @@ int main(int /* argc  */, char ** /* argv */)
 
 	try
 	{
-		TCPServer tcp(SERVER_PORT, SOCKET_OPTIONS);
+		TCPServer tcp;
 		tcp.AcceptNewClients();
-		tcp.Receive();
 		while (running)
 		{
 			/* code */
 		}
-		
 	}
-	catch(const SocketException& e)
+	catch(const Common::SocketException& e)
 	{
 		std::cout << e.what() << '\n';
 	}
+	std::cout << "Closing" << std::endl;
 	return 0;
 }

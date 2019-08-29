@@ -14,6 +14,8 @@
 #include <vector>
 #include <sstream>
 
+#include <data.pb.h>
+
 namespace Client {
 
   class TCPClient
@@ -21,7 +23,9 @@ namespace Client {
     public:
       TCPClient(std::string address , int port);
       ~TCPClient();
-      void Send(std::string data);
+      void Send(gpb::Message & message);
+      void Create(std::string&& aId, std::string&& aName, std::string&& aPsw);
+      void Delete(std::string&& aId, std::string&& aName);
       std::string Receive(int size = 1024);
       std::string Read();
       void Close();

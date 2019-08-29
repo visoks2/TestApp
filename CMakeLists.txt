@@ -7,6 +7,9 @@ set(CMAKE_CXX_COMPILER=g++)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package (Threads REQUIRED)
+find_package (Protobuf REQUIRED)
+
+add_subdirectory(Common)
 
 add_subdirectory(server)
 add_subdirectory(client)

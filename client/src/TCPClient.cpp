@@ -1,5 +1,6 @@
 #include "TCPClient.h"
-#include "exceptions.h"
+#include "Exceptions.h"
+
 using namespace Client;
 
 TCPClient::TCPClient(std::string address , int port)
@@ -10,14 +11,14 @@ TCPClient::TCPClient(std::string address , int port)
 	if(sock == -1) {
 		sock = socket(AF_INET, SOCK_STREAM , 0);
 		if (sock == -1) {
-			throw SocketException("Could not create socket");
+			throw Common::SocketException("Could not create socket");
 		}
 	}
 	server.sin_addr.s_addr = inet_addr(address.c_str());
   	server.sin_family = AF_INET;
   	server.sin_port = htons( port );
   	if (connect(sock , reinterpret_cast<struct sockaddr *>(&server) , sizeof(server)) < 0) {
-		throw SocketException("Connect failed.");
+		throw Common::SocketException("Connect failed.");
   	}
 }
 TCPClient::~TCPClient()
@@ -25,18 +26,38 @@ TCPClient::~TCPClient()
 	Close();
 }
 
-void TCPClient::Send(std::string data)
+void TCPClient::Send(gpb::Message & message)
 {
 	if(sock == -1) {
-		throw SocketException("Connect failed.");
+		throw Common::SocketException("Connect failed.");
 	}
 	
-	static int count (0);
-	count++;
-	std::string msgToSend(std::to_string(count) + "\t" + data);
+	std::string msgToSend(message.SerializeAsString() + '\0');
 	if(send(sock, msgToSend.c_str(), msgToSend.length(), 0) < 0) {
-		throw SocketException("Send failed : " + data);
+		throw Common::SocketException("Send failed");
 	}
+}
+
+void TCPClient::Create(std::string&& aId, std::string&& aName, std::string&& aPsw)
+{
+	gpb::Message message;
+	message.set_action(gpb::Message_Action::Message_Action_CREATE);
+	auto* record = message.mutable_record();
+	record->set_id(aId);
+	record->set_username(aName);
+	record->set_password(aPsw);
+	Send(message);
+
+}
+
+void TCPClient::Delete(std::string&& aId, std::string&& aName)
+{
+	gpb::Message message;
+	message.set_action(gpb::Message_Action::Message_Action_DELETE);
+	auto* record = message.mutable_record();
+	record->set_id(aId);
+	record->set_username(aName);
+	Send(message);
 }
 
 std::string TCPClient::Receive(int size)
@@ -44,7 +65,7 @@ std::string TCPClient::Receive(int size)
 	std::string buf;
 	buf.resize(size);
 	if(recv(sock, &buf.front(), size, 0) < 0) {
-	    throw SocketException("Receive failed!");
+	    throw Common::SocketException("Receive failed!");
   	}
   	return buf;
 }

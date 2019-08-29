@@ -1,2 +1,4 @@
 # TestApp
-install gtest: 'sudo apt-get install libgtest-dev'
+used libs:
+    gtest
+    proto3

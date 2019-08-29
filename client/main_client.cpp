@@ -2,7 +2,7 @@
 #include <csignal>
 
 #include "TCPClient.h"
-#include "exceptions.h"
+#include "Exceptions.h"
 
 using namespace Client;
 
@@ -26,18 +26,15 @@ int main(int argc, char *argv[])
 		TCPClient tcp(argv[1], std::atoi(argv[2]));
 		while(running)
 		{
-			std::cout << "sending" << std::endl;
-			tcp.Send(argv[3]);
-			std::cout << "receiving" << std::endl;
-			std::string rec = tcp.Receive();
-			if( rec != "" )
-			{
-				std::cout << rec << std::endl;
-			}
-			usleep(100);
+			// tcp.Send(argv[3]);
+			// std::string rec = tcp.Receive();
+			// if( rec != "" ) {
+			// 	std::cout << rec << std::endl;
+			// }
+			// usleep(100);
 		}
 	}
-	catch(const SocketException& e)
+	catch(const Common::SocketException& e)
 	{
 		std::cout << e.what() << std::endl;
 		return 1;

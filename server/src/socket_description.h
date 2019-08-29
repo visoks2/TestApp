@@ -10,7 +10,6 @@ namespace Server{
         , ip		(aIp)
         , id		(aId)
         {
-            std::cout << id << std::endl;
         }
         ~socket_description() = default;
 
@@ -20,14 +19,12 @@ namespace Server{
         int socket;
         std::string ip;
         int id; 
-        std::string message;
     };
     inline std::ostream& operator<<(std::ostream& os, const socket_description& sd)
     {
         os << "[ id:"		<< sd.id
             << " ip:"		<< sd.ip 
             << " socket:"	<< sd.socket
-            << " message:"	<< sd.message 
             << " ]";
         return os;
     }
