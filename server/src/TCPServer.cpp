@@ -20,6 +20,7 @@ TCPServer::TCPServer()
 			throw Common::SocketException("setsockopt failed"); 
 		}
 	}
+	setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&SELECT_TIMEOUT, sizeof(SELECT_TIMEOUT));
 
 	serverAddress.sin_family      = AF_INET;
 	serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -59,7 +60,7 @@ void TCPServer::listenLoop(TCPServer * aServer, const int id)
 		}
 		std::string str(ss.str());
 		str.erase(str.length() - 1);
-		std::string response = aServer->messagesHandler.ProcessMessage(str);
+		std::string response = aServer->messagesHandler.ProcessMessage(str) + '\0';
 		send(desc.socket, response.c_str(), response.length(), 0);
 
 		// char msg[ MAXPACKETSIZE ];
@@ -103,21 +104,16 @@ void TCPServer::AcceptNewClients()
 void TCPServer::welcomeLoop(TCPServer * aServer)
 {
 	while(aServer->isAcceptingNewClients) {
-		// check if any1 is trying to connect w/ timeout = SELECT_TIMEOUT
-		timeval to = SELECT_TIMEOUT;
-		fd_set rset;
-		FD_ZERO(&rset);  
-        FD_SET(aServer->sockfd, &rset); 
-		int selectVal = select(aServer->sockfd+1, &rset, NULL, NULL, &to);
-		if (!FD_ISSET(aServer->sockfd, &rset)) continue;
+		socklen_t sosize    = sizeof(clientAddress);
+		int fd = accept(aServer->sockfd,(struct sockaddr*)&aServer->clientAddress,&sosize);
+		if (fd < 0) continue;
 
 		static int clientID(0);
 		clientID++;
 
 		// hurray, got client, accept it
-		socklen_t sosize    = sizeof(clientAddress);
 		socket_description so (
-			accept(aServer->sockfd,(struct sockaddr*)&aServer->clientAddress,&sosize),
+			fd,
 			inet_ntoa(aServer->clientAddress.sin_addr),
 			clientID
 		);

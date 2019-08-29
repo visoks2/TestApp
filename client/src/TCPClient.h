@@ -17,22 +17,83 @@
 #include <data.pb.h>
 
 namespace Client {
-
+  /**	
+   * Class that connects to tcp socket and send request to create, read, update or delete credentials data
+   */
   class TCPClient
   {
     public:
-      TCPClient(std::string address , int port);
+      /**	
+       * @brief 	Creates TCP client
+       * 
+       * @param	  aAddress	Server address
+       * @param	  aPort		Server port
+       * 
+       * @throws	Common::SocketException		Cound not create socket or connect to server
+       * 
+       */
+      TCPClient(std::string aAddress , int aPort);
+
+      /**	
+       * @brief 	Closes TCP client
+       */
       ~TCPClient();
-      void Send(gpb::Message & message);
+
+      /**	
+       * @brief 	Creates credentials data
+       * 
+       * @param	  aId	  Credential id
+       * @param	  aName	Username
+       * @param	  aPsw	Password
+       * 
+       * @throws	Common::SocketException		  Socket is not opened
+       * @throws	Common::CommunicationError  Error happened during send operation
+       * 
+       */
       void Create(std::string&& aId, std::string&& aName, std::string&& aPsw);
+
+      /**	
+       * @brief 	Deletes credentials data
+       * 
+       * @param	  aId	  Credential id
+       * @param	  aName	Username
+       * 
+       * @throws	Common::SocketException		  Socket is not opened
+       * @throws	Common::CommunicationError  Error happened during send operation
+       * 
+       */
       void Delete(std::string&& aId, std::string&& aName);
-      std::string Receive(int size = 1024);
+
+      
+      // std::string Receive(int size = 1024);
       std::string Read();
-      void Close();
+
     private:
-      int sock;
-      std::string address;
-      int port;
+      /**	
+       * @brief 	Closes TCP socket
+       */
+      void Close();
+
+      /**	
+       * @brief 	Sends message to server
+       * 
+       * @param	  aMessage	Reference to message
+       * 
+       * @throws	Common::SocketException		  Socket is not opened
+       * @throws	Common::CommunicationError  Error happened during send operation
+       * 
+       */
+      void Send(gpb::Message & aMessage);
+
+
+      /**	
+       * @brief 	Socket descriptor
+       */
+      int sockedFd;
+
+      /**	
+       * @brief 	Structure describing an Internet socket address.
+       */
       struct sockaddr_in server;
   };
 

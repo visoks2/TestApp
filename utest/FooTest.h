@@ -58,7 +58,15 @@
     client.Create("id33", "name2", "pass2");
     client.Create("id33", "name2", "pass2");
     client.Delete("id33", "name");
-    std::cout << client.Receive() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
+    std::cout << client.Read() << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 

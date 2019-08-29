@@ -1,40 +1,42 @@
 #include "TCPClient.h"
 #include "Exceptions.h"
+#include "Common.h"
 
 using namespace Client;
 
-TCPClient::TCPClient(std::string address , int port)
-	: sock(-1)
-	, port(0)
-	, address("")
+TCPClient::TCPClient(std::string aAddress, int aPort)
+	: sockedFd(-1)
 {
-	if(sock == -1) {
-		sock = socket(AF_INET, SOCK_STREAM , 0);
-		if (sock == -1) {
+	if(sockedFd == -1) {
+		sockedFd = socket(AF_INET, SOCK_STREAM , 0);
+		if (sockedFd == -1) {
 			throw Common::SocketException("Could not create socket");
 		}
 	}
-	server.sin_addr.s_addr = inet_addr(address.c_str());
+	server.sin_addr.s_addr = inet_addr(aAddress.c_str());
   	server.sin_family = AF_INET;
-  	server.sin_port = htons( port );
-  	if (connect(sock , reinterpret_cast<struct sockaddr *>(&server) , sizeof(server)) < 0) {
+  	server.sin_port = htons( aPort );
+  	if (connect(sockedFd , reinterpret_cast<struct sockaddr *>(&server) , sizeof(server)) < 0) {
 		throw Common::SocketException("Connect failed.");
   	}
+	setsockopt(sockedFd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&SELECT_TIMEOUT, sizeof(SELECT_TIMEOUT));
+
 }
+
 TCPClient::~TCPClient()
 {
 	Close();
 }
 
-void TCPClient::Send(gpb::Message & message)
+void TCPClient::Send(gpb::Message & aMessage)
 {
-	if(sock == -1) {
+	if(sockedFd == -1) {
 		throw Common::SocketException("Connect failed.");
 	}
 	
-	std::string msgToSend(message.SerializeAsString() + '\0');
-	if(send(sock, msgToSend.c_str(), msgToSend.length(), 0) < 0) {
-		throw Common::SocketException("Send failed");
+	std::string msgToSend(aMessage.SerializeAsString() + '\0');
+	if(send(sockedFd, msgToSend.c_str(), msgToSend.length(), 0) < 0) {
+		throw Common::CommunicationError("Send failed");
 	}
 }
 
@@ -60,30 +62,31 @@ void TCPClient::Delete(std::string&& aId, std::string&& aName)
 	Send(message);
 }
 
-std::string TCPClient::Receive(int size)
-{
-	std::string buf;
-	buf.resize(size);
-	if(recv(sock, &buf.front(), size, 0) < 0) {
-	    throw Common::SocketException("Receive failed!");
-  	}
-  	return buf;
-}
+// std::string TCPClient::Receive(int size)
+// {
+// 	std::string buf;
+// 	buf.resize(size);
+// 	if(recv(sockedFd, &buf.front(), size, 0) < 0) {
+// 	    throw Common::SocketException("Receive failed!");
+//   	}
+//   	return buf;
+// }
+
 std::string TCPClient::Read()
 {
-  	char buffer[1] = {};
+  	char buffer[1] = {'?'};
   	std::stringstream reply;
-  	while (buffer[0] != '\n') {
-		if( recv(sock , buffer , sizeof(buffer) , 0) < 0)
+  	while (buffer[0] != 0) {
+		if( recv(sockedFd , buffer , sizeof(buffer) , 0) < 0)
 		{
-			std::cout << "receive failed!" << std::endl;
-			return nullptr;
+	    	throw Common::SocketException("Receive failed!");
 		}
 		reply << buffer[0];
 	}
 	return reply.str();
 }
+
 void TCPClient::Close()
 {
-    close( sock );
+    close( sockedFd );
 }

@@ -31,7 +31,6 @@ namespace Server {
 	const	  std::vector<int> 	SOCKET_OPTIONS 		{ SO_REUSEPORT, SO_REUSEADDR };
 	constexpr int 			   	REFRESH_INTERVAL	{100};
 	constexpr int 			   	SEND_INTERVAL		{100};
-	constexpr timeval 			SELECT_TIMEOUT		{0, 250000};
 	
 	class TCPServer
 	{

@@ -6,6 +6,8 @@ add_library(TCPServerLib
     TCPServer.cpp
     TCPServer.h
     MessagesHandler.h
+    dataStorageHandler.cpp
+    dataStorageHandler.h
     ${PROTO_SRCS} ${PROTO_HDRS}
 )
 target_link_libraries(TCPServerLib 

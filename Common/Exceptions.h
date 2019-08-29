@@ -18,4 +18,18 @@ namespace Common {
             return msg.c_str();
         }
     };
+    class CommunicationError: public std::exception
+    {
+    public:
+        std::string& msg;
+        explicit CommunicationError(std::string&& m) 
+            : msg(m)
+        {
+
+        }
+        virtual const char* what() const throw()
+        {
+            return msg.c_str();
+        }
+    };
 }
