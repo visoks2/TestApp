@@ -33,25 +33,56 @@
             },
             "problemMatcher": []
         },
-        // {
-        //     "label": "start server",
-        //     "type": "shell",
-        //     "command": "${workspaceFolder}/build/server/Server 5050 1",
-        //     "group": {
-        //         "kind": "build",
-        //         "isDefault": true,
-        //     },
-        //     "problemMatcher": []
-        // },
-        // {
-        //     "label": "start client",
-        //     "type": "shell",
-        //     "command": "${workspaceFolder}/build/client/Client 0.0.0.0 5050 help",
-        //     "group": {
-        //         "kind": "build",
-        //         "isDefault": true,
-        //     },
-        //     "problemMatcher": []
-        // }
+        {
+            "label": "run ctest",
+            "type": "shell",
+            "command": [
+                "cd build;",
+                "cmake -DCMAKE_BUILD_TYPE=Debug ..;",
+                "make;",
+                "ctest;",
+            ],
+            "group": {
+                "kind": "none",
+                "isDefault": false,
+            },
+            "problemMatcher": []
+        },
+        {
+        "label": "Coverage",
+            "type": "shell",
+            "command": [
+                "cd ${workspaceFolder};",
+                "rm -r build;",
+                "mkdir build;", 
+                "cd build;",
+                // "cmake -D CMAKE_BUILD_TYPE=Release .. ;",
+                "cmake -D CMAKE_BUILD_TYPE=Coverage .. ;",
+                "make -j $(nproc);",
+                "ctest;",
+                "mkdir -p ./coverage;",
+                // "lcov -z -d . ;",
+                // "lcov -c -d . --rc lcov_branch_coverage=1 -o ./coverage/out_uc.lcov;",
+                "lcov -c -d . --rc lcov_branch_coverage=1 -o ./coverage/out_uc.lcov;",
+                "lcov -r ./coverage/out_uc.lcov '/usr/local/*' '/usr/include/*' '8/*' '*test/*' -o ./coverage/out.lcov; ",
+                "rm -rf ./results/;",
+                "genhtml ./coverage/out.lcov -o ./results;",
+                // "firefox ${workspaceFolder}/build/results/index.html;"
+            ] ,
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false,
+            },
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+            },
+        },
     ]
 }
