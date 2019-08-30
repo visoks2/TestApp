@@ -44,6 +44,7 @@ namespace Server {
                 case gpb::Message_Action::Message_Action_READ: {
                     return storageHandler.Read(parsedMsg.record());
                 }
+ 
                 case gpb::Message_Action::Message_Action_UPDATE: {
                     storageHandler.Update(parsedMsg.record());
                     return std::string("update"); // TODO: send normal response

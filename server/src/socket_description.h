@@ -13,6 +13,7 @@ namespace Server{
         , isAuthenticated   (false)
         {
         }
+        
         ~socket_description() {
         };
 

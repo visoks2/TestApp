@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "FooTest.h"
+#include "TestCommunication.h"
  
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

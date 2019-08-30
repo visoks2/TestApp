@@ -11,6 +11,10 @@
 #define DEBUG_LOG(m)        std::cout << '[' << __FUNCTION__ << "]\t\t\t"  << #m << " : " << m << '\n';
 #define DEBUG_LOG_MSG(m, msg)   std::cout << '[' << __FUNCTION__ << "]\t"  << msg << '\t' << #m << " : " << m << '\n';
 
+
+constexpr   const char *    DEFAULT_IP              = "127.0.0.1";
+constexpr   int             DEFAULT_PORT            = 5050;
+
 // common consts
 constexpr   timeval         SELECT_TIMEOUT		        {0, 250000};
 constexpr   const char *    MASTER_PASSWORD		    = "verySecurePassword";

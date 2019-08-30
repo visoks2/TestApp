@@ -34,7 +34,7 @@ void TCPClient::Send(gpb::Message & aMessage)
 	if(sockedFd == -1) {
 		throw Common::SocketException("Connect failed.");
 	}
-	
+
 	std::string msgToSend(aMessage.SerializeAsString() + '\0');
 	if(send(sockedFd, msgToSend.c_str(), msgToSend.length(), 0) < 0) {
 		throw Common::CommunicationError("Send failed");
@@ -43,6 +43,7 @@ void TCPClient::Send(gpb::Message & aMessage)
 
 void TCPClient::Create(std::string&& aId, std::string&& aName, std::string&& aPsw)
 {
+	if (!isAuthenticated) throw Common::AuthenticationFailedException();
 	gpb::Message message;
 	message.set_action(gpb::Message_Action::Message_Action_CREATE);
 	auto* record = message.mutable_record();
@@ -55,6 +56,7 @@ void TCPClient::Create(std::string&& aId, std::string&& aName, std::string&& aPs
 
 void TCPClient::Delete(std::string&& aId, std::string&& aName)
 {
+	if (!isAuthenticated) throw Common::AuthenticationFailedException();
 	gpb::Message message;
 	message.set_action(gpb::Message_Action::Message_Action_DELETE);
 	auto* record = message.mutable_record();
@@ -84,7 +86,10 @@ std::string TCPClient::Read()
 		}
 		reply << buffer[0];
 	}
-	return reply.str();
+
+	std::string str(reply.str());
+	str.erase(str.length() - 1);
+	return std::move(str);
 }
 
 void TCPClient::Authenticate(std::string aPsw) {
@@ -96,7 +101,9 @@ void TCPClient::Authenticate(std::string aPsw) {
 	Send(message);
 	std::string response = Read();
 	DEBUG_LOG(response);
-	isAuthenticated = response.compare("You shall pass") == 0;
+	// TODO: need to create gpb response message, not only for this
+	isAuthenticated = response.compare(std::string("come on in" + 0)) == 0;
+	if (!isAuthenticated) throw Common::AuthenticationFailedException();
 }
 
 void TCPClient::Close()
