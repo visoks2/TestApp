@@ -41,5 +41,14 @@ namespace Common {
             return "Authentication failed";
         }
     };
+    class MessageParseException: public std::exception
+    {
+    public:
+        explicit MessageParseException() { }
+        virtual const char* what() const throw()
+        {
+            return "Failed to parse gpb message";
+        }
+    };
     
 }

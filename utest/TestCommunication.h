@@ -14,8 +14,6 @@
 
 
 namespace {
-
-    // The fixture for testing class Foo.
     class TestCommunication : public ::testing::Test {
     protected:
         void SetUp() override {

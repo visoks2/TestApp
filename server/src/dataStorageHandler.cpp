@@ -1,6 +1,6 @@
 #include "dataStorageHandler.h"
 #include "Common.h"
-dataStorageHandler::dataStorageHandler(/* args */)
+dataStorageHandler::dataStorageHandler()
 {
     std::string line;
     std::ifstream myfile (DB_STORAGE_FILE_NAME);

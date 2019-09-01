@@ -16,7 +16,7 @@ class dataStorageHandler
 public:
     dataStorageHandler(/* args */);
     ~dataStorageHandler();
-    void Store(gpb::Message_Record aRecord);
+    void Store(gpb::Message_Record aRecord) ;
     std::string Read(gpb::Message_Record aRecord);
     void Update(gpb::Message_Record aRecord);
     void Remove(gpb::Message_Record aRecord);

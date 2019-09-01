@@ -8,8 +8,8 @@ bool TCPServer::isOnline;
 
 
 TCPServer::TCPServer()
+	: keepRunning		(true)
 {
-	keepRunning = true;
 	isOnline = false;
 	int opt = 1;
 	sockfd = socket(AF_INET,SOCK_STREAM,0);
