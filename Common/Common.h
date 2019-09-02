@@ -6,10 +6,10 @@
 
 
 // debug common 
-#define ENTRY 		        std::cout << __FUNCTION__ << '\n';
-#define LINE_ENTRY          std::cout << __FUNCTION__ << " : " << __LINE__ << '\n';
-#define DEBUG_LOG(m)        std::cout << '[' << __FUNCTION__ << "]\t\t\t"  << #m << " : " << m << '\n';
-#define DEBUG_LOG_MSG(m, msg)   std::cout << '[' << __FUNCTION__ << "]\t"  << msg << '\t' << #m << " : " << m << '\n';
+#define ENTRY 		            //std::cout << __FUNCTION__ << '\n';
+#define LINE_ENTRY              //std::cout << __FUNCTION__ << " : " << __LINE__ << '\n';
+#define DEBUG_LOG(m)            //std::cout << '[' << __FUNCTION__ << "]\t\t\t"  << #m << " : " << m << '\n';
+#define DEBUG_LOG_MSG(m, msg)   //std::cout << '[' << __FUNCTION__ << "]\t"  << msg << '\t' << #m << " : " << m << '\n';
 
 // TODO: add some kind of configuration manager 
 constexpr   const char *    DB_STORAGE_FILE_NAME    = "db.txt";

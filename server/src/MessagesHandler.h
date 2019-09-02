@@ -16,14 +16,27 @@ namespace Server {
     class MessagesHandler
     {
     public:
+        /**	
+         * @brief 	MessagesHandler c-tor
+         */
         MessagesHandler()
         {
             storageHandler = std::make_shared<dataStorageHandler>();
         };
+        /**	
+         * @brief 	MessagesHandler c-tor
+         * 
+         * @param   aStorageHandler	    pointer to storage handler
+         * @note    Used only with mocks
+         */
         MessagesHandler(std::shared_ptr<dataStorageHandler> aStorageHandler)
         {
             storageHandler = aStorageHandler;
         };
+
+        /**	
+         * @brief 	MessagesHandler c-tor
+         */
         ~MessagesHandler() = default;
 
         std::string ProcessMessage(socket_description& user, std::string& aMsg) 

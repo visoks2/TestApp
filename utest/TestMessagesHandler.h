@@ -45,7 +45,7 @@ namespace {
 
     };
     TEST_F(TestMessagesHandler, ThrowOnInvalidInput) {
-        std::shared_ptr<MockdataStorageHandler> mockStorage;
+        std::shared_ptr<MockdataStorageHandler> mockStorage = std::shared_ptr<MockdataStorageHandler>();
         EXPECT_CALL(*mockStorage, Store(_))
             .Times(0);
         EXPECT_CALL(*mockStorage, Read(_))
