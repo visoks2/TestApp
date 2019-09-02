@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - out.lcov - server/src/socket_description.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">server/src</a> - socket_description.h<span style="font-size: 80%;"> (source / <a href="socket_description.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">out.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2019-09-02 21:34:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #pragma once</a>
+<span class="lineNum">       2 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">       3 </span>            : #include &quot;Common.h&quot;
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : namespace Server{
+<a name="6"><span class="lineNum">       6 </span>            :     class socket_description {</a>
+<a name="7"><span class="lineNum">       7 </span>            :     public:</a>
+<span class="lineNum">       8 </span><span class="lineCov">          3 :         socket_description(){}</span>
+<span class="lineNum">       9 </span><span class="lineCov">          3 :         socket_description(int aSocket, std::string aIp, int aId)</span>
+<span class="lineNum">      10 </span><span class="lineCov">          3 :         : socket                (aSocket)</span>
+<span class="lineNum">      11 </span>            :         , ip                    (aIp)
+<span class="lineNum">      12 </span>            :         , id                    (aId)
+<span class="lineNum">      13 </span><span class="lineCov">          3 :         , isAuthenticated   (false)</span>
+<span class="lineNum">      14 </span>            :         {
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">          3 :         }</span></a>
+<span class="lineNum">      16 </span>            :         
+<span class="lineNum">      17 </span><span class="lineCov">          6 :         ~socket_description() {</span>
+<span class="lineNum">      18 </span><span class="lineCov">          6 :         };</span>
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :         friend inline std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const socket_description&amp; sd);
+<span class="lineNum">      21 </span>            :         friend inline bool operator==(const socket_description&amp; aLhs, const socket_description&amp; aRhs);
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :         int         socket;
+<span class="lineNum">      24 </span>            :         std::string ip;
+<span class="lineNum">      25 </span>            :         int         id; 
+<span class="lineNum">      26 </span>            :         bool        isAuthenticated;
+<span class="lineNum">      27 </span>            :     };
+<span class="lineNum">      28 </span>            :     inline std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const socket_description&amp; sd)
+<span class="lineNum">      29 </span>            :     {
+<span class="lineNum">      30 </span>            :         os &lt;&lt; &quot;[ id:&quot;           &lt;&lt; sd.id
+<span class="lineNum">      31 </span>            :             &lt;&lt; &quot; ip:&quot;           &lt;&lt; sd.ip 
+<span class="lineNum">      32 </span>            :             &lt;&lt; &quot; socket:&quot;       &lt;&lt; sd.socket
+<span class="lineNum">      33 </span>            :             &lt;&lt; &quot; ]&quot;;
+<span class="lineNum">      34 </span>            :         return os;
+<span class="lineNum">      35 </span>            :     }
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            :     inline bool operator==(const socket_description&amp; aLhs, const socket_description&amp; aRhs) {
+<span class="lineNum">      38 </span>            :         return aLhs.id == aRhs.id;
+<span class="lineNum">      39 </span>            :     }
+<span class="lineNum">      40 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - out.lcov - client/src/TCPClient.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">client/src</a> - TCPClient.cpp<span style="font-size: 80%;"> (source / <a href="TCPClient.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">out.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntryMed">83.1 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2019-09-02 21:34:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;TCPClient.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;Exceptions.h&quot;
+<span class="lineNum">       3 </span>            : #include &quot;Common.h&quot;
+<span class="lineNum">       4 </span>            : 
+<a name="5"><span class="lineNum">       5 </span>            : using namespace Client;</a>
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span><span class="lineCov">          5 : TCPClient::TCPClient(std::string aAddress, int aPort)</span>
+<span class="lineNum">       8 </span>            :         : sockedFd(-1)
+<span class="lineNum">       9 </span><span class="lineCov">          5 :         , isAuthenticated(false)</span>
+<span class="lineNum">      10 </span>            : {
+<span class="lineNum">      11 </span><span class="lineCov">          5 :         if(sockedFd == -1) {</span>
+<span class="lineNum">      12 </span><span class="lineCov">          5 :                 sockedFd = socket(AF_INET, SOCK_STREAM , 0);</span>
+<span class="lineNum">      13 </span><span class="lineCov">          5 :                 if (sockedFd == -1) {</span>
+<span class="lineNum">      14 </span><span class="lineNoCov">          0 :                         throw Common::SocketException(&quot;Could not create socket&quot;);</span>
+<span class="lineNum">      15 </span>            :                 }
+<span class="lineNum">      16 </span>            :         }
+<span class="lineNum">      17 </span><span class="lineCov">          5 :         server.sin_addr.s_addr = inet_addr(aAddress.c_str());</span>
+<span class="lineNum">      18 </span><span class="lineCov">          5 :         server.sin_family = AF_INET;</span>
+<span class="lineNum">      19 </span><span class="lineCov">          5 :         server.sin_port = htons( aPort );</span>
+<span class="lineNum">      20 </span><span class="lineCov">          5 :         if (connect(sockedFd , reinterpret_cast&lt;struct sockaddr *&gt;(&amp;server) , sizeof(server)) &lt; 0) {</span>
+<span class="lineNum">      21 </span><span class="lineCov">          2 :                 throw Common::SocketException(&quot;Connect failed.&quot;);</span>
+<span class="lineNum">      22 </span>            :         }
+<span class="lineNum">      23 </span><span class="lineCov">          3 :         setsockopt(sockedFd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&amp;SELECT_TIMEOUT, sizeof(SELECT_TIMEOUT));</span>
+<span class="lineNum">      24 </span>            : 
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span><span class="lineCov">          6 : TCPClient::~TCPClient()</span>
+<span class="lineNum">      28 </span>            : {
+<span class="lineNum">      29 </span><span class="lineCov">          3 :         Close();</span>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineCov">          8 : void TCPClient::Send(gpb::Message &amp; aMessage)</span>
+<span class="lineNum">      33 </span>            : {
+<span class="lineNum">      34 </span><span class="lineCov">          8 :         if(sockedFd == -1) {</span>
+<span class="lineNum">      35 </span><span class="lineNoCov">          0 :                 throw Common::SocketException(&quot;Connect failed.&quot;);</span>
+<span class="lineNum">      36 </span>            :         }
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span><span class="lineCov">         16 :         std::string msgToSend(aMessage.SerializeAsString() + '\0');</span>
+<span class="lineNum">      39 </span><span class="lineCov">          8 :         if(send(sockedFd, msgToSend.c_str(), msgToSend.length(), 0) &lt; 0) {</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :                 throw Common::CommunicationError(&quot;Send failed&quot;);</span>
+<span class="lineNum">      41 </span>            :         }
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          8 : }</span></a>
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span><span class="lineCov">          2 : void TCPClient::Create(std::string&amp;&amp; aId, std::string&amp;&amp; aName, std::string&amp;&amp; aPsw)</span>
+<span class="lineNum">      45 </span>            : {
+<span class="lineNum">      46 </span><span class="lineCov">          2 :         if (!isAuthenticated) throw Common::AuthenticationFailedException();</span>
+<span class="lineNum">      47 </span><span class="lineCov">          2 :         gpb::Message message;</span>
+<span class="lineNum">      48 </span><span class="lineCov">          1 :         message.set_action(gpb::Message_Action::Message_Action_CREATE);</span>
+<span class="lineNum">      49 </span><span class="lineCov">          1 :         auto* record = message.mutable_record();</span>
+<span class="lineNum">      50 </span><span class="lineCov">          1 :         record-&gt;set_id(aId);</span>
+<span class="lineNum">      51 </span><span class="lineCov">          1 :         record-&gt;set_username(aName);</span>
+<span class="lineNum">      52 </span><span class="lineCov">          1 :         record-&gt;set_password(aPsw);</span>
+<span class="lineNum">      53 </span><span class="lineCov">          1 :         Send(message);</span>
+<span class="lineNum">      54 </span>            : 
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineCov">          1 : void TCPClient::Delete(std::string&amp;&amp; aId, std::string&amp;&amp; aName)</span>
+<span class="lineNum">      58 </span>            : {
+<span class="lineNum">      59 </span><span class="lineCov">          1 :         if (!isAuthenticated) throw Common::AuthenticationFailedException();</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :         gpb::Message message;</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :         message.set_action(gpb::Message_Action::Message_Action_DELETE);</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         auto* record = message.mutable_record();</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :         record-&gt;set_id(aId);</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         record-&gt;set_username(aName);</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :         Send(message);</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : // std::string TCPClient::Receive(int size)
+<span class="lineNum">      69 </span>            : // {
+<span class="lineNum">      70 </span>            : //      std::string buf;
+<span class="lineNum">      71 </span>            : //      buf.resize(size);
+<span class="lineNum">      72 </span>            : //      if(recv(sockedFd, &amp;buf.front(), size, 0) &lt; 0) {
+<span class="lineNum">      73 </span>            : //          throw Common::SocketException(&quot;Receive failed!&quot;);
+<span class="lineNum">      74 </span>            : //      }
+<span class="lineNum">      75 </span>            : //      return buf;
+<a name="76"><span class="lineNum">      76 </span>            : // }</a>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">          7 : std::string TCPClient::Read()</span>
+<span class="lineNum">      79 </span>            : {
+<span class="lineNum">      80 </span><span class="lineCov">          7 :         char buffer[1] = {'?'};</span>
+<span class="lineNum">      81 </span><span class="lineCov">         14 :         std::stringstream reply;</span>
+<span class="lineNum">      82 </span><span class="lineCov">        132 :         while (buffer[0] != 0) {</span>
+<span class="lineNum">      83 </span><span class="lineCov">        125 :                 if( recv(sockedFd , buffer , sizeof(buffer) , 0) &lt; 0)</span>
+<span class="lineNum">      84 </span>            :                 {
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :                 throw Common::SocketException(&quot;Receive failed!&quot;);</span>
+<span class="lineNum">      86 </span>            :                 }
+<span class="lineNum">      87 </span><span class="lineCov">        125 :                 reply &lt;&lt; buffer[0];</span>
+<span class="lineNum">      88 </span>            :         }
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span><span class="lineCov">         14 :         std::string str(reply.str());</span>
+<span class="lineNum">      91 </span><span class="lineCov">          7 :         str.erase(str.length() - 1);</span>
+<span class="lineNum">      92 </span><span class="lineCov">         14 :         return std::move(str);</span>
+<a name="93"><span class="lineNum">      93 </span>            : }</a>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">          7 : void TCPClient::Authenticate(std::string aPsw) {</span>
+<span class="lineNum">      96 </span><span class="lineCov">         14 :         gpb::Message message;</span>
+<span class="lineNum">      97 </span>            :         DEBUG_LOG(aPsw);
+<span class="lineNum">      98 </span><span class="lineCov">          7 :         message.set_action(gpb::Message_Action::Message_Action_AUTHENTICATE);</span>
+<span class="lineNum">      99 </span><span class="lineCov">          7 :         auto* record = message.mutable_record();</span>
+<span class="lineNum">     100 </span><span class="lineCov">          7 :         record-&gt;set_password(aPsw);</span>
+<span class="lineNum">     101 </span><span class="lineCov">          7 :         Send(message);</span>
+<span class="lineNum">     102 </span><span class="lineCov">         14 :         std::string response = Read();</span>
+<span class="lineNum">     103 </span>            :         DEBUG_LOG(response);
+<span class="lineNum">     104 </span>            :         // TODO: need to create gpb response message, not only for this
+<span class="lineNum">     105 </span><span class="lineCov">          7 :         isAuthenticated = response.compare(std::string(&quot;come on in&quot; + 0)) == 0;</span>
+<span class="lineNum">     106 </span><span class="lineCov">          7 :         if (!isAuthenticated) throw Common::AuthenticationFailedException();</span>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineCov">          3 : void TCPClient::Close()</span>
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineCov">          3 :     close( sockedFd );</span>
+<span class="lineNum">     112 </span><span class="lineCov">          3 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
