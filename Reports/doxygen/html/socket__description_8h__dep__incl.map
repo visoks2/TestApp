@@ -1,0 +1,8 @@
+<map id="server/src/socket_description.h" name="server/src/socket_description.h">
+<area shape="rect" id="node2" href="$main__server_8cpp.html" title="server/main_server.cpp" alt="" coords="5,155,164,181"/>
+<area shape="rect" id="node3" href="$_t_c_p_server_8h.html" title="server/src/TCPServer.h" alt="" coords="270,80,430,107"/>
+<area shape="rect" id="node7" href="$_test_messages_handler_8h.html" title="utest/TestMessagesHandler.h" alt="" coords="594,155,791,181"/>
+<area shape="rect" id="node4" href="$_t_c_p_server_8cpp.html" title="server/src/TCPServer.cpp" alt="" coords="188,155,363,181"/>
+<area shape="rect" id="node5" href="$_test_communication_8h.html" title="utest/TestCommunication.h" alt="" coords="387,155,569,181"/>
+<area shape="rect" id="node6" href="$main_8cpp.html" title="utest/main.cpp" alt="" coords="531,229,639,256"/>
+</map>

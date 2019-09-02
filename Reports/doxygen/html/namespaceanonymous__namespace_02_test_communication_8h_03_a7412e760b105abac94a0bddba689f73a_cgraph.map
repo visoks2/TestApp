@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{TestCommunication::h}::TEST_F" name="anonymous_namespace{TestCommunication::h}::TEST_F">
+<area shape="rect" id="node2" href="$class_server_1_1_t_c_p_server.html#a317dbf499fde7d30ed50e399d89a42f9" title="Server::TCPServer::\lAcceptNewClients" alt="" coords="216,5,357,47"/>
+<area shape="rect" id="node6" href="$class_client_1_1_t_c_p_client.html#a572035ec0f34cd2329b6a374dc92aa18" title="Client::TCPClient::\lAuthenticate" alt="" coords="220,71,353,112"/>
+<area shape="rect" id="node3" href="$class_server_1_1_t_c_p_server.html#a8b0b44be7a6f2d9bfa2bd211b41b0845" title="Server::TCPServer::\lwelcomeLoop" alt="" coords="417,5,558,47"/>
+<area shape="rect" id="node4" href="$class_server_1_1_t_c_p_server.html#ac4303f3fbe8746c52394be405a9bfd45" title="Server::TCPServer::\llistenLoop" alt="" coords="617,5,759,47"/>
+<area shape="rect" id="node5" href="$class_server_1_1_messages_handler.html#a545007937ca3ca7877603239db1e526a" title="Server::MessagesHandler\l::ProcessMessage" alt="" coords="807,5,980,47"/>
+<area shape="rect" id="node7" href="$class_client_1_1_t_c_p_client.html#a980732df1ac623df02249961b936ff3a" title="Sends message to server. " alt="" coords="406,74,569,101"/>
+<area shape="rect" id="node8" href="$class_client_1_1_t_c_p_client.html#af56cfcff99e300e0e3da9a0547a5dde2" title="Client::TCPClient::Read" alt="" coords="405,125,569,151"/>
+</map>

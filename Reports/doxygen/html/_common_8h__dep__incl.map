@@ -1,0 +1,12 @@
+<map id="Common/Common.h" name="Common/Common.h">
+<area shape="rect" id="node2" href="$_t_c_p_client_8cpp.html" title="client/src/TCPClient.cpp" alt="" coords="5,80,171,107"/>
+<area shape="rect" id="node3" href="$data_storage_handler_8cpp.html" title="server/src/dataStorageHandler.cpp" alt="" coords="195,80,419,107"/>
+<area shape="rect" id="node4" href="$_messages_handler_8h.html" title="server/src/MessagesHandler.h" alt="" coords="493,80,693,107"/>
+<area shape="rect" id="node8" href="$_test_communication_8h.html" title="utest/TestCommunication.h" alt="" coords="273,229,455,256"/>
+<area shape="rect" id="node10" href="$_test_messages_handler_8h.html" title="utest/TestMessagesHandler.h" alt="" coords="861,229,1059,256"/>
+<area shape="rect" id="node11" href="$socket__description_8h.html" title="server/src/socket_description.h" alt="" coords="718,80,922,107"/>
+<area shape="rect" id="node5" href="$main__server_8cpp.html" title="server/main_server.cpp" alt="" coords="678,229,837,256"/>
+<area shape="rect" id="node6" href="$_t_c_p_server_8h.html" title="server/src/TCPServer.h" alt="" coords="607,155,767,181"/>
+<area shape="rect" id="node7" href="$_t_c_p_server_8cpp.html" title="server/src/TCPServer.cpp" alt="" coords="479,229,654,256"/>
+<area shape="rect" id="node9" href="$main_8cpp.html" title="utest/main.cpp" alt="" coords="607,304,715,331"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="main" name="main">
+<area shape="rect" id="node2" href="$class_server_1_1_t_c_p_server.html#a317dbf499fde7d30ed50e399d89a42f9" title="Server::TCPServer::\lAcceptNewClients" alt="" coords="125,5,266,47"/>
+<area shape="rect" id="node6" href="$main__server_8cpp.html#a1af0f9a6ae79f5b8c42065122004b5dd" title="close_app" alt="" coords="155,71,236,98"/>
+<area shape="rect" id="node7" href="$class_common_1_1_socket_exception.html#a0e358cebbd69d1cfe5c121feadc4b0fa" title="Common::SocketException\l::what" alt="" coords="104,123,287,164"/>
+<area shape="rect" id="node3" href="$class_server_1_1_t_c_p_server.html#a8b0b44be7a6f2d9bfa2bd211b41b0845" title="Server::TCPServer::\lwelcomeLoop" alt="" coords="335,5,476,47"/>
+<area shape="rect" id="node4" href="$class_server_1_1_t_c_p_server.html#ac4303f3fbe8746c52394be405a9bfd45" title="Server::TCPServer::\llistenLoop" alt="" coords="524,5,665,47"/>
+<area shape="rect" id="node5" href="$class_server_1_1_messages_handler.html#a545007937ca3ca7877603239db1e526a" title="Server::MessagesHandler\l::ProcessMessage" alt="" coords="713,5,887,47"/>
+</map>

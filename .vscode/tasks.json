@@ -84,5 +84,28 @@
                 "clear": true,
             },
         },
+        {
+            "label": "Doxygen",
+            "type": "shell",
+            "command": [
+                "cd ${workspaceFolder};",
+                "doxygen Doxyfile;",
+            ] ,
+            "dependsOn" :[ "rebuild"],
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false,
+            },
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+            },
+        },
     ]
 }

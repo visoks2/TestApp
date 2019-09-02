@@ -1,0 +1,11 @@
+<map id="server/src/dataStorageHandler.h" name="server/src/dataStorageHandler.h">
+<area shape="rect" id="node2" href="$data_storage_handler_8cpp.html" title="server/src/dataStorageHandler.cpp" alt="" coords="143,80,367,107"/>
+<area shape="rect" id="node3" href="$_messages_handler_8h.html" title="server/src/MessagesHandler.h" alt="" coords="391,80,591,107"/>
+<area shape="rect" id="node10" href="$_mockdata_storage_handler_8h.html" title="utest/MockdataStorageHandler.h" alt="" coords="585,155,798,181"/>
+<area shape="rect" id="node4" href="$main__server_8cpp.html" title="server/main_server.cpp" alt="" coords="411,229,569,256"/>
+<area shape="rect" id="node5" href="$_t_c_p_server_8h.html" title="server/src/TCPServer.h" alt="" coords="294,155,454,181"/>
+<area shape="rect" id="node7" href="$_test_communication_8h.html" title="utest/TestCommunication.h" alt="" coords="5,229,188,256"/>
+<area shape="rect" id="node9" href="$_test_messages_handler_8h.html" title="utest/TestMessagesHandler.h" alt="" coords="594,229,791,256"/>
+<area shape="rect" id="node6" href="$_t_c_p_server_8cpp.html" title="server/src/TCPServer.cpp" alt="" coords="212,229,387,256"/>
+<area shape="rect" id="node8" href="$main_8cpp.html" title="utest/main.cpp" alt="" coords="340,304,448,331"/>
+</map>

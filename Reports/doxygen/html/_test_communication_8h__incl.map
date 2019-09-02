@@ -1,0 +1,9 @@
+<map id="utest/TestCommunication.h" name="utest/TestCommunication.h">
+<area shape="rect" id="node6" href="$_exceptions_8h.html" title="Exceptions.h" alt="" coords="175,229,274,256"/>
+<area shape="rect" id="node8" href="$_t_c_p_client_8h.html" title="TCPClient.h" alt="" coords="651,80,745,107"/>
+<area shape="rect" id="node21" href="$_t_c_p_server_8h.html" title="TCPServer.h" alt="" coords="1445,80,1543,107"/>
+<area shape="rect" id="node29" href="$_common_8h.html" title="Common.h" alt="" coords="919,229,1005,256"/>
+<area shape="rect" id="node31" href="$_messages_handler_8h.html" title="MessagesHandler.h" alt="" coords="2146,155,2285,181"/>
+<area shape="rect" id="node28" href="$socket__description_8h.html" title="socket_description.h" alt="" coords="1368,155,1511,181"/>
+<area shape="rect" id="node34" href="$data_storage_handler_8h.html" title="dataStorageHandler.h" alt="" coords="1947,229,2095,256"/>
+</map>
