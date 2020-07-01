@@ -3,52 +3,56 @@
 #include <exception>
 #include <iostream>
 
-namespace Common {
-    class SocketException: public std::exception
+namespace Common
+{
+class SocketException : public std::exception
+{
+  public:
+    std::string &msg;
+    explicit SocketException(std::string &&m) : msg(m)
     {
-    public:
-        std::string& msg;
-        explicit SocketException(std::string&& m) 
-            : msg(m)
-        {
+    }
+    virtual const char *what() const throw()
+    {
+        return msg.c_str();
+    }
+};
 
-        }
-        virtual const char* what() const throw()
-        {
-            return msg.c_str();
-        }
-    };
-    class CommunicationError: public std::exception
+class CommunicationError : public std::exception
+{
+  public:
+    std::string &msg;
+    explicit CommunicationError(std::string &&m) : msg(m)
     {
-    public:
-        std::string& msg;
-        explicit CommunicationError(std::string&& m) 
-            : msg(m)
-        {
+    }
+    virtual const char *what() const throw()
+    {
+        return msg.c_str();
+    }
+};
 
-        }
-        virtual const char* what() const throw()
-        {
-            return msg.c_str();
-        }
-    };
-    class AuthenticationFailedException: public std::exception
+class AuthenticationFailedException : public std::exception
+{
+  public:
+    explicit AuthenticationFailedException()
     {
-    public:
-        explicit AuthenticationFailedException() { }
-        virtual const char* what() const throw()
-        {
-            return "Authentication failed";
-        }
-    };
-    class MessageParseException: public std::exception
+    }
+    virtual const char *what() const throw()
     {
-    public:
-        explicit MessageParseException() { }
-        virtual const char* what() const throw()
-        {
-            return "Failed to parse gpb message";
-        }
-    };
-    
-}
+        return "Authentication failed";
+    }
+};
+
+class MessageParseException : public std::exception
+{
+  public:
+    explicit MessageParseException()
+    {
+    }
+    virtual const char *what() const throw()
+    {
+        return "Failed to parse gpb message";
+    }
+};
+
+} // namespace Common

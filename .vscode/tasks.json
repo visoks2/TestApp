@@ -10,26 +10,29 @@
                 "rm -r ./build;",
                 "mkdir build;",
                 "cd build;",
-                "cmake -DCMAKE_BUILD_TYPE=Debug ..;",
-                "make;",
+                "cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/clang-toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..;",
+                "make;"
             ],
             "group": {
                 "kind": "build",
-                "isDefault": false,
+                "isDefault": false
             },
-            "problemMatcher": []
+            "problemMatchergit v": [],
+            "problemMatcher": [
+                "$gcc"
+            ]
         },
         {
             "label": "build",
             "type": "shell",
             "command": [
                 "cd build;",
-                "cmake -DCMAKE_BUILD_TYPE=Debug ..;",
-                "make;",
+                "cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/clang-toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..;",
+                "make;"
             ],
             "group": {
                 "kind": "build",
-                "isDefault": true,
+                "isDefault": true
             },
             "problemMatcher": []
         },
@@ -38,41 +41,37 @@
             "type": "shell",
             "command": [
                 "cd build;",
-                "cmake -DCMAKE_BUILD_TYPE=Debug ..;",
+                "cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/clang-toolchain.cmake  -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..;",
                 "make;",
-                "ctest;",
+                "ctest;"
             ],
             "group": {
                 "kind": "none",
-                "isDefault": false,
+                "isDefault": false
             },
             "problemMatcher": []
         },
         {
-        "label": "Coverage",
+            "label": "Coverage",
             "type": "shell",
             "command": [
                 "cd ${workspaceFolder};",
                 "rm -r build;",
-                "mkdir build;", 
+                "mkdir build;",
                 "cd build;",
-                // "cmake -D CMAKE_BUILD_TYPE=Release .. ;",
                 "cmake -D CMAKE_BUILD_TYPE=Coverage .. ;",
                 "make -j $(nproc);",
                 "ctest;",
                 "mkdir -p ./coverage;",
-                // "lcov -z -d . ;",
-                // "lcov -c -d . --rc lcov_branch_coverage=1 -o ./coverage/out_uc.lcov;",
                 "lcov -c -d . --rc lcov_branch_coverage=1 -o ./coverage/out_uc.lcov;",
                 "lcov -r ./coverage/out_uc.lcov '/usr/local/*' '/usr/include/*' '8/*' '*test/*' -o ./coverage/out.lcov; ",
                 "rm -rf ./results/;",
-                "genhtml ./coverage/out.lcov -o ./results;",
-                // "firefox ${workspaceFolder}/build/results/index.html;"
-            ] ,
+                "genhtml ./coverage/out.lcov -o ./results;"
+            ],
             "args": [],
             "group": {
                 "kind": "build",
-                "isDefault": false,
+                "isDefault": false
             },
             "problemMatcher": "$msCompile",
             "presentation": {
@@ -81,21 +80,23 @@
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": false,
-                "clear": true,
-            },
+                "clear": true
+            }
         },
         {
             "label": "Doxygen",
             "type": "shell",
             "command": [
                 "cd ${workspaceFolder};",
-                "doxygen Doxyfile;",
-            ] ,
-            "dependsOn" :[ "rebuild"],
+                "doxygen Doxyfile;"
+            ],
+            "dependsOn": [
+                "rebuild"
+            ],
             "args": [],
             "group": {
                 "kind": "build",
-                "isDefault": false,
+                "isDefault": false
             },
             "problemMatcher": "$msCompile",
             "presentation": {
@@ -104,8 +105,8 @@
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": false,
-                "clear": true,
-            },
-        },
+                "clear": true
+            }
+        }
     ]
 }
